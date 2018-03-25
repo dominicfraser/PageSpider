@@ -6,10 +6,11 @@ def create_database(database_path: str):
     with conn:
         cur = conn.cursor()
         cur.execute("drop table if exists words")
-        ddl = "create table words" \
-              " (word TEXT not null primary key, usage_count INT not null);" \
-              " create unique index words_word_uindex on words (word);"
-        conn.close()
+        tbl = "create table words (word TEXT not null primary key, usage_count INT default 1 not null);"
+        cur.execute(tbl)
+        indx = "create unique index words_word_uindex on words (word);"
+        cur.execute(indx)
+    conn.close()
 
 
 def save_words_to_database(database_path: str, words_list: list):
@@ -25,5 +26,4 @@ def save_words_to_database(database_path: str, words_list: list):
             else:
                 sql = "insert into words(word) values ('" + word + "')"
             cur.execute(sql)
-            conn.close()
-            print("Database save complete!")
+        print("Database save complete!")
